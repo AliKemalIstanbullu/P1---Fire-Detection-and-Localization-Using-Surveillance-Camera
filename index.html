@@ -52,13 +52,15 @@
       <div class="col-sm-9"> 
         <!-- Button for uploading images. For simplicity, uploading videos will probably be a seperate function-->
         <form action="/action_page.php">
-          <input type="file" id="browse" name="filename" accept=".jpg, .jpeg, .png" hidden>
-          <label class="upload-btn" for="browse">Select Image</label>
+          <input type="file" id="image-select" name="filename" accept=".jpg, .jpeg, .png" hidden>
+          <label class="upload-btn" for="image-select">Select Image</label>
           <input type="submit">
         </form>
       </div>
     </div>
-
+    <div>
+      <img id="output" style="width:400px;">
+    </div>
     <!-- Javascript for index page -->
     <script src="scripts/index.js"></script>
   </body>
