@@ -4,26 +4,32 @@
     <meta charset="utf-8">
     <title>Fire Detection Application</title>
     <script type="javascript" src="js/main.js"></script>
-
+    <!--Custom Style Sheet-->
     <link rel="stylesheet" href="styles/style.css" />
-
+    <!--Bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
+    <!--Bootstrap Functionality-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!--Functionality for tools like the Navbar-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!--
+    <!-- Icons, which may or may not be used in the future
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </head>
+</head>
   
   <body>
+    <!-- Navbar. Doesn't actually link anywhere yet.-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">
-       <!-- <img src="images/logo.gif"  style="width:30px;height:25px;"/> -->
+       <!-- For if we add a logo
+        <img src="images/logo.gif"  style="width:30px;height:25px;"/> 
+      -->
       Fire Detection Application</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
+      <!-- If the page isn't wide enough to display all the links, The navbar will collapse down -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
@@ -36,20 +42,24 @@
       </div>
     </nav>
 
+    <!-- Just for spacing. The file upload looks ugly at the top. Will probably replace the purple with 
+      a picture of a forest or something in the future.
+         The spacer height is relative to the view height, wich is probably bad practice, but it looks nice. -->
     <div style="height: 33vh; background-color:darkorchid;"></div>
     <div class="row">
-      <div class="col-sm"></div>
-      <div class="col-sm"> 
+      <!-- Column 3 for spacing -->
+      <div class="col-sm-3"></div>
+      <div class="col-sm-9"> 
+        <!-- Button for uploading images. For simplicity, uploading videos will probably be a seperate function-->
         <form action="/action_page.php">
           <input type="file" id="browse" name="filename" accept=".jpg, .jpeg, .png" hidden>
           <label class="upload-btn" for="browse">Select Image</label>
           <input type="submit">
         </form>
       </div>
-      <div class="col-sm"></div>
-      <div class="col-sm"></div>
     </div>
 
+    <!-- Javascript for index page -->
     <script src="scripts/index.js"></script>
   </body>
 </html>
