@@ -13,13 +13,14 @@ app = Flask(__name__, '/static')
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
    if request.method == 'POST':   
-        f = request.files['file'] 
-        f.filename = "/static/test.jpg"
+        f = request.files['filename'] 
+        f.filename = "static\\test.jpg"
         f.save(f.filename) 
-        image = cv2.imread("test.jpg")
+        image = cv2.imread("static\\test.jpg")
         results = model(image)
         result_image = np.squeeze(results.render())
-        cv2.imwrite("/static/result.jpg", result_image)
+        cv2.imwrite("static\\result.jpg", result_image)
+        #return "test"
         return render_template('index.html')
    else:
        return render_template('index.html')
