@@ -2,10 +2,6 @@
 const fileSelector = document.getElementById('image-select');
 const output = document.getElementById('output');
 
-//Sets the output element to have an empty source by default.
-output.src = '';
-
-
 //This will catch when files are selected and save them into a list.
 // File selector doesn't currently support multiple files, but I may need it in the future. 
 fileSelector.addEventListener('change', (event) => {

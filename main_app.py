@@ -4,10 +4,11 @@ import cv2
 import torch
 import numpy as np
 
+
 from fileinput import filename 
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt')
 
-app = Flask(__name__)
+app = Flask(__name__, '/static')
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():

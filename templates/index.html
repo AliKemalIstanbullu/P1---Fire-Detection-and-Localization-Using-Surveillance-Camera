@@ -5,7 +5,7 @@
     <title>Fire Detection Application</title>
     <script type="javascript" src="js/main.js"></script>
     <!--Custom Style Sheet-->
-    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="../static/styles/style.css" />
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!--Bootstrap Functionality-->
@@ -52,16 +52,17 @@
       <div class="col-sm-9"> 
         <!-- Button for uploading images. For simplicity, uploading videos will probably be a seperate function-->
         <form action = "/" method = "post" enctype="multipart/form-data">   
-          <input type="file" name="file" />   
-          <input type = "submit" value="Upload">   
+          <input type="file" id="image-select" name="filename" accept=".jpg, .jpeg, .png" hidden>
+          <label class="upload-btn" for="image-select">Select Image</label>
+          <input type="submit" value="upload">
       </form>  
       </div>
     </div>
     <div>
-      <img src="../test.jpg" >
-      <img src="../result.jpg" >
+      <img id="testImg" src="../static/test.jpg" >
+      <img id="resultImg" src="../static/result.jpg" >
     </div>
     <!-- Javascript for index page -->
-    <script src="scripts/index.js"></script>
+    <script src="../static/scripts/index.js"></script>
   </body>
 </html>
