@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <title>Fire Detection Application</title>
     <script type="javascript" src="js/main.js"></script>
+    <script type="javascript">
+      {% if videos is defined and videos and videos != '' %}
+      var videos = {{ videos|tojson|safe }}
+      {% endif %}
+    </script>
     <!--Custom Style Sheet-->
     <link rel="stylesheet" href="../static/styles/style.css" />
     <!--Bootstrap-->
