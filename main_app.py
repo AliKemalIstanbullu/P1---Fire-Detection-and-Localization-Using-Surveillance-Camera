@@ -22,20 +22,27 @@ def upload_file():
           #f.filename = "static\\test.jpg"
           f.save(f.filename) 
           video = cv2.VideoCapture(f.filename)
+          frame_per_second = video.get(cv2.CAP_PROP_FPS)
+          frame_count = 0
           while (True):
-               time.sleep(30) # take schreenshot every 5 seconds
+               #time.sleep(30) # take schreenshot every 5 seconds
                # reading from frame
                ret, frame = video.read()
 
                if ret:
-                    # if video is still left continue creating images
-                    name = "static\\test.jpg"
+                    if frame_count > (30*frame_per_second): 
+                         frame_count = 0
 
-                    # writing the extracted images
-                    cv2.imwrite(name, frame)
-                    results = model(frame)
-                    result_image = np.squeeze(results.render())
-                    cv2.imwrite("static\\result.jpg", result_image)
+                         # if video is still left continue creating images
+                         name = "static\\test.jpg"
+
+                         # writing the extracted images
+                         cv2.imwrite(name, frame)
+                         results = model(frame)
+                         result_image = np.squeeze(results.render())
+                         cv2.imwrite("static\\result.jpg", result_image)
+                    else:
+                         frame_count += 1
 
                else:
                     break
@@ -48,7 +55,7 @@ def upload_file():
           #return "test"
           return render_template('index.html', videos=videos)
      else:
-          return render_template('index.html', videos="test")
+          return render_template('index.html')
      
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
