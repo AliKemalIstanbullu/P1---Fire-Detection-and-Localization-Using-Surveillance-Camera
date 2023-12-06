@@ -22,7 +22,7 @@ def upload_file():
           f.save(f.filename) 
           video = cv2.VideoCapture(f.filename)
           while (True):
-               time.sleep(5) # take schreenshot every 5 seconds
+               time.sleep(30) # take schreenshot every 5 seconds
                # reading from frame
                ret, frame = video.read()
 
