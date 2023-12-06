@@ -13,6 +13,7 @@ videos = []
 
 app = Flask(__name__, '/static')
 
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
      if request.method == 'POST':   
@@ -47,4 +48,9 @@ def upload_file():
           #return "test"
           return render_template('index.html', videos=videos)
      else:
-          return render_template('index.html')
+          return render_template('index.html', videos="test")
+     
+if __name__ == '__main__':
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.run(debug=True)
