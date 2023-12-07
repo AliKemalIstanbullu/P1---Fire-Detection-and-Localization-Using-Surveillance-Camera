@@ -4,6 +4,9 @@ import cv2
 import torch
 import numpy as np
 import time
+import signal
+
+from background_thread import BackgroundThreadFactory, TASKS_QUEUE
 
 
 from fileinput import filename 
@@ -18,40 +21,14 @@ app = Flask(__name__, '/static')
 def upload_file():
      if request.method == 'POST':   
           f = request.files['filename']
-          videos.append(f.filename) 
+                    
           #f.filename = "static\\test.jpg"
           f.save(f.filename) 
-          video = cv2.VideoCapture(f.filename)
-          frame_per_second = video.get(cv2.CAP_PROP_FPS)
-          frame_count = 0
-          while (True):
-               #time.sleep(30) # take schreenshot every 5 seconds
-               # reading from frame
-               ret, frame = video.read()
-
-               if ret:
-                    if frame_count > (30*frame_per_second): 
-                         frame_count = 0
-
-                         # if video is still left continue creating images
-                         name = "static\\test.jpg"
-
-                         # writing the extracted images
-                         cv2.imwrite(name, frame)
-                         results = model(frame)
-                         result_image = np.squeeze(results.render())
-                         cv2.imwrite("static\\result.jpg", result_image)
-                    else:
-                         frame_count += 1
-
-               else:
-                    break
-
-          # Release all space and windows once done
-          video.release()
-          cv2.destroyAllWindows()
-        
-        
+          TASKS_QUEUE.put(f.filename) 
+          notification_thread = BackgroundThreadFactory.create('notification')
+          notification_thread.start()
+          
+          videos.append(f.filename) 
           #return "test"
           return render_template('index.html', videos=videos)
      else:
