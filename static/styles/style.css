@@ -1,3 +1,30 @@
+/*#upload-grid {
+  border-style: solid;
+  border-width: 2px;
+}*/
+
+.name_column {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.border_top{
+  border-top: 2px solid;
+}
+
+.upload_column {
+  padding: 3px !important;
+}
+
+.smallImg {
+  display: block;
+  max-width:100%;
+  max-height:20vh;
+  width: auto;
+  height: auto;
+}
+
 .upload-btn {
     background-color: indigo;
     color: white;

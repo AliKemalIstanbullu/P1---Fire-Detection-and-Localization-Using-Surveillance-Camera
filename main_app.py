@@ -32,7 +32,7 @@ def upload_file():
           #return "test"
           return render_template('index.html', videos=videos)
      else:
-          return render_template('index.html')
+          return render_template('index.html', videos=videos)
      
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
