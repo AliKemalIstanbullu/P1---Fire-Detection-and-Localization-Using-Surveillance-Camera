@@ -37,15 +37,19 @@ function refreshImages(){
     element = element.substring( 1, element.length - 1 )
     rowName = element.split('.')[0]
 
-    if (new File("../static/"+rowName+"/test.jpg").exists){
+    checkImg = new Image()
+    checkImg.src = "../static/"+rowName+"/test.jpg"
+    if (checkImg.height != 0){
       document.getElementById("testImg"+i).src = ""
       document.getElementById("testImg"+i).src = "../static/"+rowName+"/test.jpg?random="+new Date().getTime();
     }
-    if (new File("../static/"+rowName+"/result.jpg").exists){
+    checkImg = new Image()
+    checkImg.src = "../static/"+rowName+"/result.jpg"
+    if (checkImg.height != 0){
       document.getElementById("resultImg"+i).src = ""
       document.getElementById("resultImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
     }
-    
+
     console.log("alerted")
     console.log(videos)
 
@@ -160,7 +164,7 @@ function createUploadRow(fileName, rowNum){
   test_img = document.createElement('img');
   test_img.setAttribute("id", "testImg"+rowNum);
   test_img.setAttribute("class", "smallImg");
-  test_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.jpg'")
+  test_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.png'")
   test_img.setAttribute("src", "../static/"+rowName+"/test.jpg");
   upload_col_2.appendChild(test_img);
 
@@ -172,7 +176,7 @@ function createUploadRow(fileName, rowNum){
   result_img = document.createElement('img');
   result_img.setAttribute("id", "resultImg"+rowNum);
   result_img.setAttribute("class", "smallImg");
-  result_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.jpg'")
+  result_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.png'")
   result_img.setAttribute("src", "../static/"+rowName+"/result.jpg");
   upload_col_3.appendChild(result_img);
 
