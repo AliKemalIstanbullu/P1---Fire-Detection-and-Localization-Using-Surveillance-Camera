@@ -4,25 +4,24 @@ const output = document.getElementById('output');
 
 //An array that tracks the upload row elements
 var uploadRows = []
+var alertedList = []
 
 //The main grid
 const uploadGrid = document.getElementById('upload-grid');
-
-console.log('Videos:')
-//videos = videos.filter((item, i, ar) => ar.indexOf(item) === i)
-console.log(videos)
 
 //Videos isn't read as an array,  so I've gotta turn it into an array manually
 videos = videos.substring( 1, videos.length - 1 )
 videos = videos.split(',')
 
 i = 0
+if (videos.length > 1 || (videos.length == 1 && videos[0] != "")){
 videos.forEach(element => {
   element = element.trim()
   element = element.substring( 1, element.length - 1 )
   createUploadRow(element, i)
   i++
 });
+}
 
 //Set up notifications
 Notification.requestPermission().then(function (permission) {    console.log(permission);});
@@ -31,26 +30,32 @@ let permission = Notification.permission;
 //Checks through each of the videos/streams to see if any fires are detected, and refreshes the images in the meantime.
 
 function refreshImages(){
-  console.log("a")
 
   i = 0
   videos.forEach(element => {
-    console.log("i: "+i)
     element = element.trim()
     element = element.substring( 1, element.length - 1 )
     rowName = element.split('.')[0]
 
-    document.getElementById("testImg"+i).src = ""
-    document.getElementById("testImg"+i).src = "../static/"+rowName+"/test.jpg?random="+new Date().getTime();
-    document.getElementById("resultImg"+i).src = ""
-    document.getElementById("resultImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
+    if (new File("../static/"+rowName+"/test.jpg").exists){
+      document.getElementById("testImg"+i).src = ""
+      document.getElementById("testImg"+i).src = "../static/"+rowName+"/test.jpg?random="+new Date().getTime();
+    }
+    if (new File("../static/"+rowName+"/result.jpg").exists){
+      document.getElementById("resultImg"+i).src = ""
+      document.getElementById("resultImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
+    }
     
-    url = "../static/"+rowName+"/result.txt"
+    console.log("alerted")
+    console.log(videos)
 
-    console.log(url)
-    fetch(url)
-      .then( r => r.text() )
-      .then( t => checkResults(t, rowName))
+    //if(!alertedList.includes(i)){
+      url = "../static/"+rowName+"/result.txt"
+
+      fetch(url)
+        .then( r => r.text() )
+        .then( t => checkResults(t, rowName, i))
+      //}
     i++
   });
 
@@ -59,8 +64,8 @@ function refreshImages(){
 
 refreshImages();
 
-function checkResults(result, rowName){
-  console.log(result)
+function checkResults(result, rowName, index){
+
   if (result > 0){
     //Generate Date String
     const now1 = new Date();
@@ -71,7 +76,11 @@ function checkResults(result, rowName){
     } else if(permission === "default"){   
       requestAndShowPermission(now, rowName);
     } else {  
-      alert("Fire detected at " + now);}
+      alert("Fire detected at " + now);
+    }
+
+    alertedList.push(index)
+    document.getElementById("upload_function_"+index).style.color("red")
   }
 }
 
@@ -87,7 +96,7 @@ function requestAndShowPermission(now, rowName) {
 function showNotification(now, rowName) {
   console.log("d")
   if(document.visibilityState === "visible") {
-      return;
+    alert(rowName+"\n Fire detected at " + now);
   }   
   var title = "Fire Detected";   
   var body = "Fire detected at " + now;   
@@ -129,7 +138,7 @@ function readImage(file) {
 function createUploadRow(fileName, rowNum){
   rowName = fileName.split('.')[0]
 
-  console.log("row: " + rowName)
+  //console.log("row: " + rowName)
   newRow = document.createElement('div');
   newRow.setAttribute("id", "upload_row_"+rowNum);
   newRow.setAttribute("class", "row upload_row");
@@ -151,6 +160,7 @@ function createUploadRow(fileName, rowNum){
   test_img = document.createElement('img');
   test_img.setAttribute("id", "testImg"+rowNum);
   test_img.setAttribute("class", "smallImg");
+  test_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.jpg'")
   test_img.setAttribute("src", "../static/"+rowName+"/test.jpg");
   upload_col_2.appendChild(test_img);
 
@@ -162,6 +172,7 @@ function createUploadRow(fileName, rowNum){
   result_img = document.createElement('img');
   result_img.setAttribute("id", "resultImg"+rowNum);
   result_img.setAttribute("class", "smallImg");
+  result_img.setAttribute("onerror", "this.onerror=null; this.src='../static/default.jpg'")
   result_img.setAttribute("src", "../static/"+rowName+"/result.jpg");
   upload_col_3.appendChild(result_img);
 
