@@ -80,6 +80,7 @@ class NotificationThread(BackgroundThread):
             video = cv2.VideoCapture(task)
             frame_per_second = video.get(cv2.CAP_PROP_FPS)
             frame_count = 0
+            object_count = 0
             while (True):
  
                # reading from frame
@@ -97,12 +98,19 @@ class NotificationThread(BackgroundThread):
                          results = model(frame)
                          result_image = np.squeeze(results.render())
                          cv2.imwrite("static\\"+stripped+"\\result.jpg", result_image)
+                         detected_objects = results.pandas().xyxy[0] 
+                         object_count = len(detected_objects)
+                         if object_count > 0:
+                             break
+                         
                     else:
                          frame_count += 1
 
                else:
                     break
-
+            f = open("static\\"+stripped+"\\result.txt", "w")
+            f.write(str(object_count))
+            f.close()
             # Release all space and windows once done
             video.release()
             cv2.destroyAllWindows()
