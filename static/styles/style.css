@@ -34,7 +34,11 @@
   cursor: pointer;
   margin-top: 1rem;
 }
-  
+
+div {
+  max-width: 100vw;
+}
+
 .row {
     max-width:100vw;
 }

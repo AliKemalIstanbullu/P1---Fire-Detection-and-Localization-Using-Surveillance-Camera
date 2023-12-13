@@ -41,7 +41,7 @@ function refreshImages(){
     rowName = element.split('.')[0]
 
     document.getElementById("testImg"+i).src = ""
-    document.getElementById("testImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
+    document.getElementById("testImg"+i).src = "../static/"+rowName+"/test.jpg?random="+new Date().getTime();
     document.getElementById("resultImg"+i).src = ""
     document.getElementById("resultImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
     
@@ -50,7 +50,7 @@ function refreshImages(){
     console.log(url)
     fetch(url)
       .then( r => r.text() )
-      .then( t => checkResults(t))
+      .then( t => checkResults(t, rowName))
     i++
   });
 
@@ -59,7 +59,7 @@ function refreshImages(){
 
 refreshImages();
 
-function checkResults(result){
+function checkResults(result, rowName){
   console.log(result)
   if (result > 0){
     //Generate Date String
@@ -67,31 +67,31 @@ function checkResults(result){
     const now = now1.toLocaleString();
     console.log("b")
     if(permission === "granted") {   
-      showNotification(now);
+      showNotification(now, rowName);
     } else if(permission === "default"){   
-      requestAndShowPermission(now);
+      requestAndShowPermission(now, rowName);
     } else {  
       alert("Fire detected at " + now);}
   }
 }
 
-function requestAndShowPermission(now) {
+function requestAndShowPermission(now, rowName) {
   Notification.requestPermission(function (permission) {
      if (permission === "granted") {
-           showNotification(now);
+           showNotification(now, rowName);
      }
      console.log("c")
   });
 }
 
-function showNotification(now) {
+function showNotification(now, rowName) {
   console.log("d")
   if(document.visibilityState === "visible") {
       return;
   }   
   var title = "Fire Detected";   
   var body = "Fire detected at " + now;   
-  var notification = new Notification('Title', { body });   notification.onclick = () => { 
+  var notification = new Notification(rowName, { body });   notification.onclick = () => { 
     notification.close();
     window.parent.focus();
   }
