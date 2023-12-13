@@ -105,12 +105,12 @@ class BackgroundThread(threading.Thread, ABC):
         self.shutdown()
 
 
-class NotificationThread(BackgroundThread):
+class VideoThread(BackgroundThread):
     def startup(self) -> None:
-        logging.info('NotificationThread started')
+        logging.info('VideoThread started')
 
     def shutdown(self) -> None:
-        logging.info('NotificationThread stopped')
+        logging.info('VideoThread stopped')
 
     def handle(self) -> None:
         try:
@@ -159,12 +159,68 @@ class NotificationThread(BackgroundThread):
         except queue.Empty:
             time.sleep(1)
 
+class StreamThread(BackgroundThread):
+    def startup(self) -> None:
+        logging.info('StreamThread started')
+
+    def shutdown(self) -> None:
+        logging.info('StreamThread stopped')
+
+    def handle(self) -> None:
+        try:
+            task = TASKS_QUEUE.get(block=False)
+            
+            os.makedirs('static\\'+task['name'], exist_ok=True)
+            cap = cv2.VideoCapture(task['address'])
+            
+            frame_count = 0
+            object_count = 0
+            while (True):
+ 
+               # reading from frame
+               ret, frame = cap.read()
+
+               if ret:
+                    if frame_count == (900): 
+                         frame_count = 0
+
+                         # if video is still left continue creating images
+                         name = "static\\"+task['name']+"\\test.jpg"
+
+                         # writing the extracted images
+                         cv2.imwrite(name, frame)
+                         results = model(frame)
+                         result_image = np.squeeze(results.render())
+                         cv2.imwrite("static\\"+task['name']+"\\result.jpg", result_image)
+                         detected_objects = results.pandas().xyxy[0] 
+                         object_count = len(detected_objects)
+                         if object_count > 0:
+                             sendAlert(task['name'])
+                             break
+                         
+                    else:
+                         frame_count += 1
+
+               else:
+                    break
+            f = open("static\\"+task['name']+"\\result.txt", "w")
+            f.write(str(object_count))
+            f.close()
+            # Release all space and windows once done
+            cap.release()
+            cv2.destroyAllWindows()
+            self.stop()
+        except queue.Empty:
+            time.sleep(1)
+
 
 class BackgroundThreadFactory:
     @staticmethod
     def create(thread_type: str) -> BackgroundThread:
-        if thread_type == 'notification':
-            return NotificationThread()
+        if thread_type == 'video':
+            return VideoThread()
+        if thread_type == 'stream':
+            return StreamThread()
 
         # if thread_type == 'some_other_type':
         #     return SomeOtherThread()

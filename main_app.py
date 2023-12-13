@@ -20,15 +20,16 @@ app = Flask(__name__, '/static')
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
      if request.method == 'POST':   
-          f = request.files['filename']
+          name = request.form['filename']
+          feed = request.form['streamurl']
                     
           #f.filename = "static\\test.jpg"
-          f.save(f.filename) 
-          TASKS_QUEUE.put(f.filename) 
-          notification_thread = BackgroundThreadFactory.create('notification')
+          
+          TASKS_QUEUE.put({'name':name, 'address':feed}) 
+          notification_thread = BackgroundThreadFactory.create('stream')
           notification_thread.start()
           
-          videos.append(f.filename) 
+          videos.append(name) 
           #return "test"
           return render_template('index.html', videos=videos)
      else:
