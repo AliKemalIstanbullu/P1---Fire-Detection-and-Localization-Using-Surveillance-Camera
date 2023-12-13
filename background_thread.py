@@ -9,6 +9,30 @@ import cv2
 import torch
 import numpy as np
 import os
+import smtplib
+from email.message import EmailMessage
+
+def sendAlert(filename):
+    file1 = open('config.txt', 'r')
+    lines = file1.readlines()
+    file1.close()
+    send_user = lines[0].strip()
+    send_password = lines[1].strip()
+    receive_user = lines[2].strip()
+
+    msg = EmailMessage()
+    msg.set_content(filename)
+    msg['Subject'] = 'fire'
+    msg['From'] = send_user
+    msg['To'] = receive_user
+
+    s = smtplib.SMTP("smtp-mail.outlook.com",587)
+    s.ehlo() # Hostname to send for this command defaults to the fully qualified domain name of the local host.
+    s.starttls() #Puts connection to SMTP server in TLS mode
+    s.ehlo()
+    s.login(send_user, send_password)
+    s.send_message(msg)
+    s.quit()
 
 TASKS_QUEUE = Queue()
 
@@ -101,6 +125,7 @@ class NotificationThread(BackgroundThread):
                          detected_objects = results.pandas().xyxy[0] 
                          object_count = len(detected_objects)
                          if object_count > 0:
+                             sendAlert(task)
                              break
                          
                     else:
