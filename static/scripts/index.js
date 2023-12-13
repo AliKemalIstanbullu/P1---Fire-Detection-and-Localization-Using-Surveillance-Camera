@@ -99,3 +99,10 @@ function createUploadRow(fileName, rowNum){
   }
   
 }
+
+function toggleForm() {
+  if (document.getElementById("emailForm").style.display == "block")
+    document.getElementById("emailForm").style.display = "none";
+  else
+  document.getElementById("emailForm").style.display = "block";
+}
