@@ -24,14 +24,86 @@ videos.forEach(element => {
   i++
 });
 
+//Set up notifications
+Notification.requestPermission().then(function (permission) {    console.log(permission);});
+let permission = Notification.permission;
+
+//Checks through each of the videos/streams to see if any fires are detected, and refreshes the images in the meantime.
+
+function refreshImages(){
+  console.log("a")
+
+  i = 0
+  videos.forEach(element => {
+    console.log("i: "+i)
+    element = element.trim()
+    element = element.substring( 1, element.length - 1 )
+    rowName = element.split('.')[0]
+
+    document.getElementById("testImg"+i).src = ""
+    document.getElementById("testImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
+    document.getElementById("resultImg"+i).src = ""
+    document.getElementById("resultImg"+i).src = "../static/"+rowName+"/result.jpg?random="+new Date().getTime();
+    
+    url = "../static/"+rowName+"/result.txt"
+
+    console.log(url)
+    fetch(url)
+      .then( r => r.text() )
+      .then( t => checkResults(t))
+    i++
+  });
+
+  setTimeout(refreshImages, 30000);
+}
+
+refreshImages();
+
+function checkResults(result){
+  console.log(result)
+  if (result > 0){
+    //Generate Date String
+    const now1 = new Date();
+    const now = now1.toLocaleString();
+    console.log("b")
+    if(permission === "granted") {   
+      showNotification(now);
+    } else if(permission === "default"){   
+      requestAndShowPermission(now);
+    } else {  
+      alert("Fire detected at " + now);}
+  }
+}
+
+function requestAndShowPermission(now) {
+  Notification.requestPermission(function (permission) {
+     if (permission === "granted") {
+           showNotification(now);
+     }
+     console.log("c")
+  });
+}
+
+function showNotification(now) {
+  console.log("d")
+  if(document.visibilityState === "visible") {
+      return;
+  }   
+  var title = "Fire Detected";   
+  var body = "Fire detected at " + now;   
+  var notification = new Notification('Title', { body });   notification.onclick = () => { 
+    notification.close();
+    window.parent.focus();
+  }
+}
 
 //This will catch when files are selected and save them into a list.
 // File selector doesn't currently support multiple files, but I may need it in the future. 
-fileSelector.addEventListener('change', (event) => {
+/*fileSelector.addEventListener('change', (event) => {
   const fileList = event.target.files;
   console.log(fileList);
   readImage(fileList[0])
-});
+});*/
 
 //The actual function for reading the image
 function readImage(file) {
@@ -41,6 +113,8 @@ function readImage(file) {
     return;
   }
 
+
+  /*
   //Creates a file reader, and once the file reader has loaded, logs the file address
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
@@ -48,8 +122,9 @@ function readImage(file) {
     //Replaces the output element's source with the uploaded file address to confirm the upload was successful
     output.src = event.target.result;
   });
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(file);*/
 }
+
 
 function createUploadRow(fileName, rowNum){
   rowName = fileName.split('.')[0]
@@ -74,7 +149,7 @@ function createUploadRow(fileName, rowNum){
   newRow.appendChild(upload_col_2);
 
   test_img = document.createElement('img');
-  test_img.setAttribute("id", "testImg");
+  test_img.setAttribute("id", "testImg"+rowNum);
   test_img.setAttribute("class", "smallImg");
   test_img.setAttribute("src", "../static/"+rowName+"/test.jpg");
   upload_col_2.appendChild(test_img);
@@ -85,7 +160,7 @@ function createUploadRow(fileName, rowNum){
   newRow.appendChild(upload_col_3);
 
   result_img = document.createElement('img');
-  result_img.setAttribute("id", "resultImg");
+  result_img.setAttribute("id", "resultImg"+rowNum);
   result_img.setAttribute("class", "smallImg");
   result_img.setAttribute("src", "../static/"+rowName+"/result.jpg");
   upload_col_3.appendChild(result_img);
