@@ -1,0 +1,3 @@
+sender@email.com
+senderPassword
+receiver@email.com
