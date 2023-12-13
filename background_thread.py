@@ -12,19 +12,35 @@ import os
 import smtplib
 from email.message import EmailMessage
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
 def sendAlert(filename):
     file1 = open('config.txt', 'r')
     lines = file1.readlines()
     file1.close()
+
+    stripped = filename.split('.', 1)[0]
+
     send_user = lines[0].strip()
     send_password = lines[1].strip()
     receive_user = lines[2].strip()
 
-    msg = EmailMessage()
-    msg.set_content(filename)
-    msg['Subject'] = 'fire'
+    msg = MIMEMultipart()
+    msg['Subject'] = 'fire Alert in ' + filename
     msg['From'] = send_user
     msg['To'] = receive_user
+
+    text = MIMEText('<p>fire detected in : ' + filename + '</p><img src="cid:image1">', 'html')
+    msg.attach(text)
+
+    image = MIMEImage(open("static\\"+stripped+"\\result.jpg", 'rb').read())
+
+    # Define the image's ID as referenced in the HTML body above
+    image.add_header('Content-ID', '<image1>')
+    msg.attach(image)
+
 
     s = smtplib.SMTP("smtp-mail.outlook.com",587)
     s.ehlo() # Hostname to send for this command defaults to the fully qualified domain name of the local host.
